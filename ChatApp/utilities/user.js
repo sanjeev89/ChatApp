@@ -50,7 +50,9 @@ class Users {
       console.log(this.users[i]);
     }
   }
+
 }
+
 
 module.exports = {
   Users

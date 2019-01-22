@@ -109,7 +109,7 @@
 
       <div class="row" id="msg_form" style="display:none">
         <div class="col-sm-12 col-md-2" >
-          <div class="row p-3  d-flex justify-content-center" style="overflow-y:scroll">
+          <div class="row p-3  d-flex justify-content-center" style="overflow-y:scroll; height:500px">
             <div >online users will appear here
               <ul id="online_users"></ul>
             </div>
@@ -128,31 +128,36 @@
           <br>
           <div id="message"></div>
           </div>
-          <div class="row col-sm-12"
+
+
+          <div class="row">      <!--input button starts here-->
+          <div class="row col-sm-12 col-md-12"
            style=
            "margin-left:5px;
             margin-right:5px;
-            overflow: hidden;
+            
             margin-top:20px;
-            position: fixed;
+            
             bottom: 5;
             ">
            <br>
             <input
               type="text"
               id="msg"
-              style="width:800px"
+              style="width:800px;"
               placeholder="Enter message"
             />
             <button id="send" class="btn btn-primary" style="margin-left:3px">SEND</button>
             <button id="location" class="btn btn-danger" style="margin-left:3px">location</button>
           </div>
         </div>
+       </div>
         <!--all the chats will appear here-->
 
         <div class="col-sm-12 col-md-2 ">
           <div class="row p-3 text-center  d-flex justify-content-center" >
-            <div id="chat_rooms">chat rooms will be here</div>
+            <span>chat rooms will be here</span>
+            <div id="chat_rooms"></div>
           </div>
         </div>
         <!--chatroom's name will be here-->

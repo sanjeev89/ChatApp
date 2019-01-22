@@ -31,6 +31,7 @@ $(function() {
       username: username.val(),
       room: room.val()
     };
+    
     //online_users.push(obj);
     //console.log(online_users);
     //socket.emit('user_list',obj);
@@ -90,4 +91,21 @@ $(function() {
       )
       
   })
+
+  socket.on('rooms', function(data){
+    console.log('rooms : '+data)
+    for(var i=0;i<data.length;i++){
+      $('#chat_rooms').append($('<li>'+data[i]+'</li>'))
+    }
+  })
+
+  socket.on("rooms", function(data) {
+    var ol = jQuery("<ol></ol>");
+
+    data.forEach(function(room_name) {
+      ol.append(jQuery("<li></li>").text(room_name));
+    });
+
+    jQuery("#chat_rooms").html(ol);
+  });
 });

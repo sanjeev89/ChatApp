@@ -18,6 +18,7 @@ server.listen(1000, function(){
 
 var {Users}=require('./utilities/user');
 var users=new Users();
+var u_rooms=[];
 
 io.on('connection', function(socket){
     console.log('connected successfully');
@@ -32,6 +33,8 @@ io.on('connection', function(socket){
         console.log(users.getUserList(data.room));
 
         io.to(data.room).emit('connected_users',users.getUserList(data.room));
+        console.log('emitted rooms '+get_rooms(data.room))
+        io.emit('rooms', get_rooms(data.room))
         //emit for welcome in chat here to himself
         //broadcast other this bkl has entered
         
@@ -59,6 +62,19 @@ io.on('connection', function(socket){
         }
     })
 })
+
+function get_rooms(room){
+    var i=0;
+    for(i=0;i<u_rooms.length;i++){
+        if(u_rooms[i]===room){
+            return u_rooms;
+        }
+    }
+    if(i===u_rooms.length){
+        u_rooms.push(room);
+        return u_rooms;
+    }
+}
 
 
 
