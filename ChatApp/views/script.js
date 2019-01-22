@@ -49,6 +49,16 @@ $(function() {
       msg: msg.val()
     };
     //console.log(obj);
+      message.append(
+        `<div class="col-md-8">
+          <div class="d-inline-flex p-2" style="background-color:blanchedalmond;border-radius:10px;font-style:italic;">
+           ${obj.username}<br>${msg.val()}
+          </div>
+        </div>
+        <br>
+        `
+    )
+
     socket.emit('create_msg', obj);
   });
 
@@ -68,7 +78,16 @@ $(function() {
 
   socket.on('new_msg', function(data){
       console.log(data)
-      message.append($('<li>'+data.username+' : '+ data.msg+'</li>'))
+      //message.append($('<li>'+data.username+' : '+ data.msg+'</li>'))
+      message.append(
+        `<div class="d-flex justify-content-end" id="data">
+         <div class="d-flex justify-content-end col-md-8" style="">
+         <div class="d-inline-flex p-2" style="background-color:rgb(225, 221, 230);margin-right:10px;border-radius:10px;">${data.username}<br>${data.msg}</div>
+         </div>
+         </div> 
+         <br>
+        `
+      )
       
   })
 });
