@@ -10,14 +10,36 @@ var login_form = $("#login_form");
 var msg_form = $("#msg_form");
 var message = $("#message");
 var online_list = $("#online_users");
+var room_name=$('#room-name');
 console.log("vasco di gama was here")
+
 send.click(function(e){
+  var params = $.deparam(window.location.search);
+  if(params.pic===''){
+    params.pic='1.jpg';
+  }
   e.preventDefault();
   var obj = {
-   // username:username.val(),
+    name:params.username,
+    pic:params.pic,
     msg:msg.val()
   }
+console.log('hello india ' +params.pic);
 console.log('send with success '+obj);
+  message.append(
+      `<div class="d-flex justify-content-start mb-4">  <!--sender ka msg-->  
+       <div class="img_cont_msg">
+          <img src="${obj.pic}" class="rounded-circle user_img_msg">
+       </div>
+       <div class="msg_cotainer">
+       <div class="d-flex justify-content-start mb-0 form-text text-muted" style="font-size:12px; margin-top:-7px;">
+       <em>${obj.name}</em>
+       </div>
+          ${msg.val()}
+          <span class="msg_time">${get_time()}, Today</span>
+       </div>
+       </div>
+       `)
 socket.emit('create_msg', obj, function(){});
 })
 
@@ -26,6 +48,9 @@ socket.on('connect', function(){
   console.log('connected user id is now '+socket.id+' '+ms);
   var params = $.deparam(window.location.search);
   console.log('params ' +params)
+  if(params.pic===''){
+    params.pic='1.jpg';
+  }
   
   socket.emit('join', params, function(err){
     if(err){
@@ -43,220 +68,91 @@ socket.on("disconnect", function() {
 });
 
 socket.on("connected_users", function(data) {                   
-  var ol = jQuery("<ol></ol>");
+  var ui = jQuery(`<ui class="contacts"></ui>`);
 
   data.forEach(function(user) {
     console.log(user);
-    ol.append(jQuery(`<li id="username-box"></li>`).text(user));
+    ui.append(jQuery(
+        `<li class="">     <!--yhaa se -->
+          <div class="d-flex bd-highlight">
+            <div class="img_cont">
+                <img src="${user.pic}" class="rounded-circle user_img">
+                <span class="online_icon"></span>
+            </div>
+            <div class="user_info">
+                <span>${user.name}</span>
+                <p>${user.name} is online</p>
+            </div>
+           </div>
+          </li>
+        `))
   });
-
-  jQuery("#online_users").html(ol);
+  jQuery("#online_users").html(ui);
 });
 
 socket.on('new_msg', function(data){
   console.log('received data is '+data)
   //message.append($('<li>'+data.username+' : '+ data.msg+'</li>'))
   message.append(
-          `<div class=" clearfix mt-4">        <!--leftbox data-->
-           <div class=" float-left message-box-left p-4" style="border:1px solid rgb(233, 21, 56);width:60%; ">
-          <h6>${data.username}</h6>
-          <div class="d-inline-flex float-left" style="border:1px solid pink;">
-           <h5>${data.msg}</h5>
-          </div>
-          <h6 class="float-right">time</h6>
-          </div>
-          </div>       <!--leftbox data ends here-->
-          <br>
-          `)
+      `<div class="d-flex justify-content-end mb-4">    <!--receiver ka msg-->
+        <div class="msg_cotainer_send">         <!--idr message append krna h-->
+        <div class="d-flex justify-content-start mb-0 form-text text-muted" style="font-size:12px; margin-top:-7px;">
+        <em>${data.name}</em>
+        </div>
+          ${data.msg}
+          <span class="msg_time_send">${get_time()}, Today</span>      <!--idr apun time add krega-->
+        </div>
+        <div class="img_cont_msg">
+          <img src="${data.pic}" class="rounded-circle user_img_msg">
+        </div>
+       </div>
+      `
+  )
 })
 
 socket.on('user_disconnected', function(user){
   console.log(user.name+' has left');
   //message.append('<li>'+user.name+' has left '+'</li>')
   message.append(
-    `<div class="row text-center p-2" style="background-color:darkkhaki;">
-      ${user.name} has left  
-     </div>
-    `)
+      `<div class="d-flex justify-content-center mb-4">
+       <span class="p-2" style="background-color:yellow; border-radius:5px">${user.name} left</span>
+       </div>`
+  )
 })
-
-  
-  
-
-
-
-
 
 socket.on('msg_himself', function(data){
   console.log("I have newly joined the chat room "+data);
   //message.append(`<li>${data}</li>`)
     message.append(
-      `<div class="row text-center p-2" style="background-color:darkkhaki;">
-       ${data} 
-       </div>
-      `)  
+        `<div class="d-flex justify-content-center mb-4">
+         <span class="p-2" style="background-color:yellow; border-radius:5px">${data}</span>
+         </div>
+         `
+    )  
 })
 
 socket.on('new_user_joined', function(data){
   console.log('new user joined with data '+data);
   //message.append(`<li>${data}</li>`)
   message.append(
-    `<div class="row text-center p-2" style="background-color:darkkhaki;">
-     ${data}
-     </div>
-    `)
+      `<div class="d-flex justify-content-center mb-4">
+       <span class="p-2" style="background-color:yellow; border-radius:5px">${data}</span>
+       </div>`
+  ) 
 
 })
 
 socket.on('rooms', function(data){
-  console.log('rooms : '+data)
-  for(var i=0;i<data.length;i++){
-    $('#chat_rooms').append($('<li>'+data[i]+'</li>'))
-  }
+  var b=$('<b></b>')
+  room_name.append(`<b>${data}</b>`)
 })
 
+function get_time(){
+var time = new Date();
+console.log(time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }));
+return time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+console.log(time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }));
+}
 
 
 
-
-
-//connected_users done
-//new user_joined
-/*
-console.log("i am connected");
-
-const socket = io();
-$(function(){
-  var obj = {
-    id: null,
-    username: username.val(),
-    room: room.val()
-  };
-
-socket.on("connected", function() {
-  //ab msg ka send/recv iske andr hoga
-  var username = $("#username");
-  var room = $("#room");
-  var msg = $("#msg");
-  var send = $("#send");
-  var submit = $("#submit");
-  var login_form = $("#login_form");
-  var msg_form = $("#msg_form");
-  var message = $("#message");
-
-  var online_list = $("#online_users");
-  console.log("i am connected " + socket.id);
-  console.log("hello earthlings");
-  socket.emit("join", obj, function(err) {
-    if (err) {
-      alert(err);
-    } else {
-      console.log("No error");
-    }
-  });
-});
-})
-//var online_users=[];
-$(function() {
-  var username = $("#username");
-  var room = $("#room");
-  var msg = $("#msg");
-  var send = $("#send");
-  var submit = $("#submit");
-  var login_form = $("#login_form");
-  var msg_form = $("#msg_form");
-  var message = $("#message");
-
-  var online_list = $("#online_users");
-
-  submit.click(function(e) {
-    e.preventDefault();
-    login_form.hide();
-    msg_form.show();
-    // console.log("username is "+username.val());
-    //console.log("room is "+room.val());
-    var obj = {
-      id: null,
-      username: username.val(),
-      room: room.val()
-    };
-    
-    //online_users.push(obj);
-    //console.log(online_users);
-    //socket.emit('user_list',obj);
-
-  });
-
-  send.click(function() {
-    var obj = {
-      username: username.val(),
-      msg: msg.val()
-    };
-    //console.log(obj);
-
-
-    socket.emit('create_msg', obj,function(){
-      
-    });
-  });
-  
-  socket.on('new_user_joined', function(data){
-    console.log(data);
-  })
-  socket.on("connected_users", function(data) {                   
-    var ol = jQuery("<ol></ol>");
-
-    data.forEach(function(user) {
-      ol.append(jQuery("<li></li>").text(user));
-    });
-
-    jQuery("#online_users").html(ol);
-  });
-
-  socket.on("disconnect", function() {
-    console.log("user disconnected");
-  });
-
-  socket.on('new_msg', function(data){
-      console.log(data)
-      //message.append($('<li>'+data.username+' : '+ data.msg+'</li>'))
-      message.append(
-        `<div class="d-flex justify-content-end" id="data">
-         <div class="d-flex justify-content-end col-md-8" style="">
-         <div class="d-inline-flex p-2" style="background-color:rgb(225, 221, 230);margin-right:10px;border-radius:10px;">${data.username}<br>${data.msg}</div>
-         </div>
-         </div> 
-         <br>
-        `
-      )
-      
-  })
-
-  socket.on('rooms', function(data){
-    console.log('rooms : '+data)   
-    for(var i=0;i<data.length;i++){
-      $('#chat_rooms').append($('<li>'+data[i]+'</li>'))
-    }
-  })
-
-  socket.on('user_disconnected', function(data){
-        // console.log("i am here "+JSON.parse(data));
-         message.append(
-          `<div class="d-flex justify-content-center">
-             <div class="d-flex-inline p-2" style="background-color:yellow;border-radius:5px;">${data.name} left the chat</div>
-           </div>
-           `
-         )
-  })
-
-  socket.on("rooms", function(data) {
-    var ol = jQuery("<ol></ol>");
-
-    data.forEach(function(room_name) {
-      ol.append(jQuery("<li></li>").text(room_name));
-    });
-
-    jQuery("#chat_rooms").html(ol);
-  });
-});
-*/

@@ -34,9 +34,10 @@ io.on('connection', function(socket){
 
      socket.join(params.room);
      users.removeUser(socket.id);
-     users.addUser(socket.id, params.username, params.room);
+     users.addUser(socket.id, params.username, params.room, params.pic);
 
      io.to(params.room).emit('connected_users', users.getUserList(params.room));
+     io.to(params.room).emit('rooms',params.room);
      socket.emit('msg_himself', "welcome to the chatApp");
      socket.broadcast.to(params.room).emit('new_user_joined', `${params.username} has joined the ${params.room}`);
      callback();
@@ -48,7 +49,7 @@ io.on('connection', function(socket){
     
     if(user && isRealString(message.msg)){
         message.username=user.name;
-      io.to(user.room).emit('new_msg', message); /* */
+      socket.broadcast.to(user.room).emit('new_msg', message); /* */
       console.log('send with success to new_msg '+message.msg);
     }
    

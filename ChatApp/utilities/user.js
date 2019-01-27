@@ -65,7 +65,8 @@ module.exports = {
 [{
   id: '/#12poiajdspfoif',
   name: 'Andrew',
-  room: 'The Office Fans'
+  room: 'The Office Fans',
+  pic:'1.jpg'
 }]
 
 // addUser(id, name, room)
@@ -77,8 +78,8 @@ class Users {
   constructor () {
     this.users = [];
   }
-  addUser (id, name, room) {
-    var user = {id, name, room};
+  addUser (id, name, room, pic) {
+    var user = {id, name, room, pic};
     this.users.push(user);
     return user;
   }
@@ -94,11 +95,18 @@ class Users {
   getUser (id) {
     return this.users.filter((user) => user.id === id)[0]
   }
+  
   getUserList (room) {
     var users = this.users.filter((user) => user.room === room);
     var namesArray = users.map((user) => user.name);
-
-    return namesArray;
+    var obj=[];
+    for(var i=0;i<this.users.length;i++){
+       if(this.users[i].room==room){
+         obj.push(this.users[i]);
+       }
+    }
+    console.log(obj);
+    return obj;
   }
 }
 
