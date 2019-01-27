@@ -47,7 +47,7 @@ socket.on("connected_users", function(data) {
 
   data.forEach(function(user) {
     console.log(user);
-    ol.append(jQuery(`<li id="username-box"></li>`).text(user));
+    ol.append(jQuery("<li></li>").text(user));
   });
 
   jQuery("#online_users").html(ol);
@@ -72,12 +72,7 @@ socket.on('new_msg', function(data){
 
 socket.on('user_disconnected', function(user){
   console.log(user.name+' has left');
-  //message.append('<li>'+user.name+' has left '+'</li>')
-  message.append(
-    `<div class="row text-center p-2" style="background-color:darkkhaki;">
-      ${user.name} has left  
-     </div>
-    `)
+  message.append('<li>'+user.name+' has left '+'</li>')
 })
 
   
@@ -89,22 +84,12 @@ socket.on('user_disconnected', function(user){
 
 socket.on('msg_himself', function(data){
   console.log("I have newly joined the chat room "+data);
-  //message.append(`<li>${data}</li>`)
-    message.append(
-      `<div class="row text-center p-2" style="background-color:darkkhaki;">
-       ${data} 
-       </div>
-      `)  
+  message.append(`<li>${data}</li>`)  
 })
 
 socket.on('new_user_joined', function(data){
   console.log('new user joined with data '+data);
-  //message.append(`<li>${data}</li>`)
-  message.append(
-    `<div class="row text-center p-2" style="background-color:darkkhaki;">
-     ${data}
-     </div>
-    `)
+  message.append(`<li>${data}</li>`)
 
 })
 
