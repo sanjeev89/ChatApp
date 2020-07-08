@@ -5,6 +5,7 @@ const http=require('http');
 const path=require('path');
 const socketio=require('socket.io');
 const server=http.createServer(app);
+const fileUpload = require('express-fileupload')
 app.use(express.static(path.join(__dirname,'views')));
 app.set('views', path.join(__dirname,'views'));
 const io=socketio(server);
@@ -27,7 +28,12 @@ io.on('connection', function(socket){
     console.log('connected user id is now '+socket.id+' '+ms);
 
   socket.on('join', function(params, callback){
-      console.log(params);
+   if(params.pic==undefined || params.pic!='' || params.pic==''){
+        var img_num = Math.floor((Math.random() * 10) + 1)+10;
+        params.pic=img_num.toString()+'.jpg'
+        console.log(params.pic) 
+   }
+    console.log(params);
      if(!isRealString(params.username) || !isRealString(params.room)){
          return callback("Incorrect username or data ");
      } 

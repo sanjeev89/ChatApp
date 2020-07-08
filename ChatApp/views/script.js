@@ -15,9 +15,11 @@ console.log("vasco di gama was here")
 
 send.click(function(e){
   var params = $.deparam(window.location.search);
-  if(params.pic===''){
-    params.pic='1.jpg';
-  }
+  if(params.pic==undefined || params.pic!='' || params.pic==''){
+    var img_num = Math.floor((Math.random() * 10) + 1)+10;
+    params.pic=img_num.toString()+'.jpg'
+    console.log(params.pic) 
+}
   e.preventDefault();
   var obj = {
     name:params.username,
@@ -115,7 +117,7 @@ socket.on('user_disconnected', function(user){
   //message.append('<li>'+user.name+' has left '+'</li>')
   message.append(
       `<div class="d-flex justify-content-center mb-4">
-       <span class="p-2" style="background-color:yellow; border-radius:5px">${user.name} left</span>
+       <span class="p-2" style="background-color:#ccccff; border-radius:5px">${user.name} left</span>
        </div>`
   )
 })
@@ -125,7 +127,7 @@ socket.on('msg_himself', function(data){
   //message.append(`<li>${data}</li>`)
     message.append(
         `<div class="d-flex justify-content-center mb-4">
-         <span class="p-2" style="background-color:yellow; border-radius:5px">${data}</span>
+         <span class="p-2" style="background-color:#ccccff; border-radius:5px">${data}</span>
          </div>
          `
     )  
@@ -136,7 +138,7 @@ socket.on('new_user_joined', function(data){
   //message.append(`<li>${data}</li>`)
   message.append(
       `<div class="d-flex justify-content-center mb-4">
-       <span class="p-2" style="background-color:yellow; border-radius:5px">${data}</span>
+       <span class="p-2" style="background-color:#ccccff; border-radius:5px">${data}</span>
        </div>`
   ) 
 
